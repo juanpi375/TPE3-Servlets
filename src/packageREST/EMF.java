@@ -10,13 +10,13 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class EMF implements ServletContextListener {
 	private static EntityManagerFactory emf;
-
 	/**
 	 * @see ServletContextListener#contextInitialized(ServletContextEvent)
 	 */
-	public void contextInitialized(ServletContextEvent arg0) {
-		emf = Persistence.createEntityManagerFactory("Jersey");
-	}
+//	public void contextInitialized(ServletContextEvent arg0) {
+//	public void contextInitialized() {
+//		emf = Persistence.createEntityManagerFactory("Jersey");
+//	}
 
 	/**
 	 * @see ServletContextListener#contextDestroyed(ServletContextEvent)
@@ -27,8 +27,13 @@ public class EMF implements ServletContextListener {
 
 	public static EntityManager createEntityManager() {
 		if (emf == null) {
-			throw new IllegalStateException("Context is not initialized yet.");
+			emf = Persistence.createEntityManagerFactory("Jersey");
+//			throw new IllegalStateException("Context is not initialized yet.");
 		}
 		return emf.createEntityManager();
 	}
 }
+
+
+
+
