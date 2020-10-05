@@ -51,6 +51,19 @@ public class StudentRESTController {
 		}
 	}
 	
+	@GET
+	@Path("/career/{career}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Student> getStudentByCareer(@PathParam("career") int c) {
+		List<Student> student = StudentDAO.getInstance().findAllByCareerFilterCity(c);
+		if(student!=null) {
+			return student;
+		}
+		else {
+			return null;
+		}
+	}
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

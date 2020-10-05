@@ -18,9 +18,9 @@
 			<input required type="text"  id="MatriLu" placeholder="lu">
 			<input required type="number" id="starYear" placeholder="starYear" >
 			<input type="number" id="graduationYear" placeholder="graduationYear" >
-			<select name="carrers" id="allCarrers">
-				<option value="0" selected hidden>carrers</option>
-			</select>	
+			<select id="allCareers1" class="allCareers">
+				<option value="0" selected hidden>Carreras</option>
+			</select>
 			<input type="submit">
 		</form>
 	</div>
@@ -76,14 +76,26 @@
 	
 	<div>
 		<p> Obtener estudiantes por carrera </p>
-		<select name="" id=""></select> 
-		<input id="getStudentByCarrer" type="text">
+		<select id="allCareers2" class="allCareers">
+			<option value="0" selected hidden>Carreras</option>
+		</select>	
+		<input id="getStudentByCareer" type="button">
+		<div id="studentsForCareer" >
+		</div>		
 	</div>
 
 	<div>
 		<p> Obtener carreras con incriptos </p>
 			<input id="getCarrers" type="button">
 			<div id="carrerstWithInscript" >
+				
+			</div>
+	</div>
+	
+	<div>
+		<p> Obtener reporte de carreras </p>
+			<input id"getReport" type="button">
+			<div id="report" >
 				
 			</div>
 	</div>

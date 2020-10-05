@@ -200,17 +200,24 @@ async function getAllCareers(){
             }, );
             let students = await r.json();
 //            console.log("jeje"+students) 
-            selectCarrers= document.querySelector("#allCarrers");
+            let selectCareers= document.querySelectorAll(".allCareers");
+            console.log(selectCareers[0].id+" "+selectCareers[1].id+" sdfsdf")
             for(let c in students){
-                let opt=document.createElement("option");
-            let spn=document.createElement("span");
-            let cName= document.createTextNode(students[c].name);
-            spn.append(cName);
-            opt.value=students[c].id;
-            opt.append(spn);
-            selectCarrers.append(opt)
-            console.log("dddd")
-        }
+               
+//            console.log(selectCareers+"sdf")
+	            for(let sel of selectCareers){
+	            	 let opt=document.createElement("option");
+	                 let spn=document.createElement("span");
+	                 let cName= document.createTextNode(students[c].name);
+	                 spn.append(cName);
+	                 opt.value=students[c].id;
+	                 opt.append(spn);
+	            	sel.append(opt)
+	            	console.log(sel)
+	            }
+	//            selectCarrers.append(opt)
+	            console.log("dddd")
+	        }
     }
     catch{
         
@@ -315,7 +322,23 @@ function getAllStudentsByGenre(e){
 
 
 // g) recuperar los estudiantes de una determinada carrera, filtrado por ciudad de residencia.
+document.getElementById("getStudentByCareer").addEventListener('click',function(e){getStudentByCareer(e)})
 
+function getStudentByCareer(e){
+    e.preventDefault();
+    career= document.getElementById("allCareers2").value;
+    if(career ==0){
+        console.log("elija una carrera")
+        return
+    }else{
+        fetch(url+'/students/career/' + career)
+        .then(response => response.json())
+        .then(resp => {
+            let cont= document.querySelector("#studentsForCareer");
+                showStudents(resp,cont);
+            })
+    }
+}
 
 
 // h) generar un reporte de las carreras, que para cada carrera incluya información de los

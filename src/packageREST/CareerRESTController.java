@@ -44,6 +44,19 @@ public class CareerRESTController {
 			}
 		}
 		
+		@GET
+		@Path("/report")
+		@Produces(MediaType.APPLICATION_JSON)
+		public ReportDTO report() {
+			ReportDTO car = CareerDAO.getInstance().getReport();
+			if(car!=null) {
+				return car;
+			}
+			else {
+				return null;
+			}
+		}
+		
 		
 		
 }

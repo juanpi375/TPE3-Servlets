@@ -1,5 +1,6 @@
 package packageREST;
 
+import java.util.ArrayList;
 //import java.util.Calendar;
 import java.util.List;
 
@@ -63,6 +64,90 @@ public class CareerDAO implements DAO<Career, Integer>{
 		return careers;
 	}
 	
+//	@SuppressWarnings("unchecked")
+//	public List<Career> getReport() {
+//		EntityManager entityManager=EMF.createEntityManager();
+//		Query q = entityManager.createQuery( );
+//		
+//		ReportDTO report = q.getResultList();
+//		return report;
+//	}
+	
+	
+//	PROBARRR
+public List<Object> getReport() {
+		EntityManager em=EMF.createEntityManager();
+		Query firstQuery = em.createQuery("SELECT c.name, m.startYear, COUNT(m) FROM Matriculation m JOIN m.career c "+
+				 "GROUP BY c.name, m.startYear ORDER BY c.name, r.startYear");
+		@SuppressWarnings("unchecked")
+		List<Object[]> listFirstQuery = firstQuery.getResultList();
+		
+		Query secondQuery = em.createQuery("SELECT c.name, m.graduationYear, COUNT(m) FROM Matriculation m JOIN m.career c "+
+				 "WHERE m.finished = true "+
+				 "GROUP BY c.name, r.graduationYear ORDER BY c.name, r.graduationYear");
+		@SuppressWarnings("unchecked")
+		List<Object[]> listSecondQuery = secondQuery.getResultList();
+		
+		List<Object> list = new ArrayList<Object>();
+		
+		String nameCareer = null;
+
+		for(int i=0; i<listFirstQuery.size(); i++) {
+			
+			if(nameCareer == null) {				
+				nameCareer = (String) listFirstQuery.get(i)[0];
+			
+			} else if(!listFirstQuery.get(i)[0].equals(nameCareer)) {
+				
+				for(int l=0; l<listSecondQuery.size(); l++) {
+					
+					if(listSecondQuery.get(l)[0].equals(nameCareer)) {
+						if(!list.contains(listSecondQuery.get(l)[1])) {
+							list.add(listSecondQuery.get(l)[1]);
+							list.add(0);
+							list.add(listSecondQuery.get(l)[2]);
+						}	
+					}
+				}	
+				nameCareer = (String) listFirstQuery.get(i)[0];
+			}
+			
+			if(!list.contains(listFirstQuery.get(i)[0])) {
+				list.add(listFirstQuery.get(i)[0]);
+			}
+				for(int k=0; k<listSecondQuery.size(); k++) {
+					if(listFirstQuery.get(i)[0].equals(listSecondQuery.get(k)[0])) { 
+						
+						if((((int) listFirstQuery.get(i)[1]) < (int) (listSecondQuery.get(k)[1]))) {
+							list.add(listFirstQuery.get(i)[1]);
+							list.add(listFirstQuery.get(i)[2]);
+							list.add(0);
+							break;
+							
+							
+						} else if((((int) listFirstQuery.get(i)[1]) == (int) (listSecondQuery.get(k)[1]))) {
+							list.add(listFirstQuery.get(i)[1]);
+							list.add(listFirstQuery.get(i)[2]);
+							list.add(listSecondQuery.get(k)[2]);
+							break;
+							
+						} else {
+							if(!list.contains(listFirstQuery.get(i)[1])) {
+								list.add(listSecondQuery.get(k)[1]);
+								list.add(0);
+								list.add(listSecondQuery.get(k)[2]);	
+							}	
+						}
+					}
+					if((k == listSecondQuery.size()-1) && (!list.contains(listFirstQuery.get(i)[1]))) {
+						list.add(listFirstQuery.get(i)[1]);
+						list.add(listFirstQuery.get(i)[2]);
+						list.add(0);
+					}
+				}
+		}
+		return list;
+	}
 	
 	@Override
 	public boolean delete(Integer id) {

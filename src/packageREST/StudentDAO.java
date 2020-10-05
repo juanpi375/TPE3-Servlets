@@ -68,5 +68,18 @@ private static StudentDAO daoStudent;
 		return students;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Student> findAllByCareerFilterCity(int idCareer){
+		EntityManager entityManager=EMF.createEntityManager();
+//		Query q = entityManager.createQuery("SELECT s FROM Student s JOIN s.matriculations m WHERE m.student = s.LU AND m.career=?1 ORDER BY s.city", Student.class);
+		Query q = entityManager.createQuery("SELECT s FROM Student s"
+				+" JOIN s.matriculations m JOIN m.career c"
+				+" WHERE m.career = c AND c.id = ?1 AND s.LU = m.student order by s.city");
+		q.setParameter(1, idCareer);
+		List<Student> students = q.getResultList();
+		return students;
+	}
+	
+	
 	
 }
