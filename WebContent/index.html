@@ -4,11 +4,92 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="style.css">
-	<title>Document</title>
-
+	<title>TP 3 - Grupo 11</title>
 </head>
-<h2>prueba01</h2>
-<body>
+	<header>
+		<h2>Arquitectura Web - TUDAI</h2>
+	</header>
+	
+	<div>
+		<!-- <select name="" id="AllCarrers"></select>
+		<select name="" id="AllStudient"></select> -->
+		<p> Matricular</p>
+		<form id="addMat" method="POST">
+			<input required type="text"  id="MatriLu" placeholder="lu">
+			<input required type="number" id="starYear" placeholder="starYear" >
+			<input type="number" id="graduationYear" placeholder="graduationYear" >
+			<select name="carrers" id="allCarrers">
+				<option value="0" selected hidden>carrers</option>
+			</select>	
+			<input type="submit">
+		</form>
+	</div>
+
+
+	<div>
+		<!--  dar de alta un estudiante-->
+		<p> Dar de alta un estudiante </p>
+		<form id="addStudent" method="POST">
+			<input required placeholder="name" id="name" type="text">
+			<input required placeholder="surname" id="surname" type="text">
+			<input required placeholder="age" id="age" type="number">
+			<input required placeholder="genre" id="genre" type="text">
+			<input required placeholder="dni" id="dni" type="number">
+			<input required placeholder="city" id="city" type="text">
+			<input type="submit">
+		</form>
+	</div>
+	
+	<div>
+		<p> Obtener estudiante </p>
+		<form id="getStudentForm">
+			<input id="getStudent" type="text" placeholder="Libreta Universitaria">
+			<input type="submit">
+		</form>
+		<div hidden id="divInner">
+
+		</div>
+	</div>
+
+	<div>
+		<p> Obtener carrera</p>
+		<Form:get>
+			<input id="getCareer" type="button">
+		</Form:get>
+	</div>
+	
+	<div>
+		<p> Obtener estudiantes </p>
+		<input id="getStudents" type="button" placeholder="Obtener estudiantes">
+
+		<div id="showStudents">
+			<span>Todos los estudiantes</span>
+		</div>
+
+	</div>
+	
+	<p> Obtener estudiantes por genero</p>
+	<form id="getAllStudentsByGenre">
+		<input id="studentGenre" type="text" placeholder="genre"> 
+		<input id="btnSbyGenre" type="submit">
+	</form>
+	
+	<div>
+		<p> Obtener estudiantes por carrera </p>
+		<select name="" id=""></select> 
+		<input id="getStudentByCarrer" type="text">
+	</div>
+
+	<div>
+		<p> Obtener carreras con incriptos </p>
+			<input id="getCarrers" type="button">
+			<div id="carrerstWithInscript" >
+				
+			</div>
+	</div>
+	
+	<script src="js.js"> </script>
+	<body>
 	
 </body>
 </html>

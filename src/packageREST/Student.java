@@ -5,12 +5,15 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Student {
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int LU;
 	@Column
 	private String name;
@@ -31,9 +34,8 @@ public class Student {
 		super();
 	}
 	
-	public Student(String name, String surname, int age, char genre, int dni, String city, int lU) {
+	public Student(String name, String surname, int age, char genre, int dni, String city) {
 		super();
-		this.LU = lU;
 		this.name = name;
 		this.surname = surname;
 		this.age = age;
@@ -95,7 +97,7 @@ public class Student {
 	public void setMatriculations(List<Matriculation> matriculations) {
 		this.matriculations = matriculations;
 	}
-
+	
 	public int getLU() {
 		return LU;
 	}
