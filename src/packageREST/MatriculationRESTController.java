@@ -29,7 +29,6 @@ public class MatriculationRESTController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createMatriculation(MatriculationDTO m) {
-//		Matriculation mat = (Matriculation)m;
 		Career c = CareerDAO.getInstance().findById(m.getCareer());
 		Student s = StudentDAO.getInstance().findById(m.getStudent());
 		
@@ -41,7 +40,6 @@ public class MatriculationRESTController {
 //			CareerDAO.getInstance().addMatriculation(matResult);
 //			StudentDAO.getInstance().addMatriculation(matResult);
 			return Response.status(201).entity(m).build();
-//			return "esto siiiiiii";
 		}
 	}
 }

@@ -30,6 +30,19 @@ public class CareerRESTController {
 			}
 		}
 		
+		@GET
+		@Path("/with-students")
+		@Produces(MediaType.APPLICATION_JSON)
+		public List<Career> getStudentByLU() {
+			List<Career> car = CareerDAO.getInstance().findAllWithStudents();
+			if(car!=null) {
+				return car;
+			}
+			else {
+				return null;
+			}
+		}
+		
 		
 		
 }

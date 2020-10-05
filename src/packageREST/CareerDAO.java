@@ -52,7 +52,18 @@ public class CareerDAO implements DAO<Career, Integer>{
 		List<Career> careers = q.getResultList();
 		return careers;
 	}
-
+	
+//	Devuelve lista de carreras que poseen alumnos ordenada por su cantidad
+	@SuppressWarnings("unchecked")
+	public List<Career> findAllWithStudents() {
+		EntityManager entityManager=EMF.createEntityManager();
+		Query q = entityManager.createQuery("SELECT c FROM Career c WHERE "
+				+ "SIZE(c.students) > 0 ORDER BY SIZE(c.students) DESC", Career.class);
+		List<Career> careers = q.getResultList();
+		return careers;
+	}
+	
+	
 	@Override
 	public boolean delete(Integer id) {
 		throw new UnsupportedOperationException();
