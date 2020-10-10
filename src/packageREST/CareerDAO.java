@@ -65,11 +65,12 @@ public class CareerDAO implements DAO<Career, Integer>{
 	}
 	
 //	@SuppressWarnings("unchecked")
-//	public List<Career> getReport() {
+//	public List<Object[]> getReport() {
 //		EntityManager entityManager=EMF.createEntityManager();
 //		Query q = entityManager.createQuery( );
 //		
-//		ReportDTO report = q.getResultList();
+//		List<Object[]> report = q.getResultList();
+////		ReportDTO report = q.getResultList();
 //		return report;
 //	}
 	
@@ -78,13 +79,14 @@ public class CareerDAO implements DAO<Career, Integer>{
 public List<Object> getReport() {
 		EntityManager em=EMF.createEntityManager();
 		Query firstQuery = em.createQuery("SELECT c.name, m.startYear, COUNT(m) FROM Matriculation m JOIN m.career c "+
-				 "GROUP BY c.name, m.startYear ORDER BY c.name, r.startYear");
+				 "GROUP BY c.name, m.startYear ORDER BY c.name, m.startYear");
 		@SuppressWarnings("unchecked")
 		List<Object[]> listFirstQuery = firstQuery.getResultList();
 		
 		Query secondQuery = em.createQuery("SELECT c.name, m.graduationYear, COUNT(m) FROM Matriculation m JOIN m.career c "+
-				 "WHERE m.finished = true "+
-				 "GROUP BY c.name, r.graduationYear ORDER BY c.name, r.graduationYear");
+				 "WHERE m.graduationYear IS NOT NULL "+
+				 "GROUP BY c.name, m.graduationYear ORDER BY c.name, m.graduationYear");
+		
 		@SuppressWarnings("unchecked")
 		List<Object[]> listSecondQuery = secondQuery.getResultList();
 		
@@ -94,13 +96,17 @@ public List<Object> getReport() {
 
 		for(int i=0; i<listFirstQuery.size(); i++) {
 			
-			if(nameCareer == null) {				
+//			Agrega el nombre de la carrera solo la primera vez que aparece
+//			en la primera de las listas
+			if(nameCareer == null) {
 				nameCareer = (String) listFirstQuery.get(i)[0];
-			
 			} else if(!listFirstQuery.get(i)[0].equals(nameCareer)) {
 				
 				for(int l=0; l<listSecondQuery.size(); l++) {
 					
+//					Si los nombres de las listas de ambas carreras coinciden,
+//					envío a la lista que se retornará los años de inscripción 
+//					y de graduación
 					if(listSecondQuery.get(l)[0].equals(nameCareer)) {
 						if(!list.contains(listSecondQuery.get(l)[1])) {
 							list.add(listSecondQuery.get(l)[1]);
@@ -112,39 +118,42 @@ public List<Object> getReport() {
 				nameCareer = (String) listFirstQuery.get(i)[0];
 			}
 			
+//			Si se está iterando sobre otra carrera distinta a
+//			sobre la cual se venía, se la agrega
 			if(!list.contains(listFirstQuery.get(i)[0])) {
 				list.add(listFirstQuery.get(i)[0]);
 			}
-				for(int k=0; k<listSecondQuery.size(); k++) {
-					if(listFirstQuery.get(i)[0].equals(listSecondQuery.get(k)[0])) { 
-						
-						if((((int) listFirstQuery.get(i)[1]) < (int) (listSecondQuery.get(k)[1]))) {
-							list.add(listFirstQuery.get(i)[1]);
-							list.add(listFirstQuery.get(i)[2]);
-							list.add(0);
-							break;
-							
-							
-						} else if((((int) listFirstQuery.get(i)[1]) == (int) (listSecondQuery.get(k)[1]))) {
-							list.add(listFirstQuery.get(i)[1]);
-							list.add(listFirstQuery.get(i)[2]);
-							list.add(listSecondQuery.get(k)[2]);
-							break;
-							
-						} else {
-							if(!list.contains(listFirstQuery.get(i)[1])) {
-								list.add(listSecondQuery.get(k)[1]);
-								list.add(0);
-								list.add(listSecondQuery.get(k)[2]);	
-							}	
-						}
-					}
-					if((k == listSecondQuery.size()-1) && (!list.contains(listFirstQuery.get(i)[1]))) {
+			
+			for(int k=0; k<listSecondQuery.size(); k++) {
+				if(listFirstQuery.get(i)[0].equals(listSecondQuery.get(k)[0])) { 
+					
+					if((((int) listFirstQuery.get(i)[1]) < (int) (listSecondQuery.get(k)[1]))) {
 						list.add(listFirstQuery.get(i)[1]);
 						list.add(listFirstQuery.get(i)[2]);
 						list.add(0);
+						break;
+						
+						
+					} else if((((int) listFirstQuery.get(i)[1]) == (int) (listSecondQuery.get(k)[1]))) {
+						list.add(listFirstQuery.get(i)[1]);
+						list.add(listFirstQuery.get(i)[2]);
+						list.add(listSecondQuery.get(k)[2]);
+						break;
+						
+					} else {
+						if(!list.contains(listFirstQuery.get(i)[1])) {
+							list.add(listSecondQuery.get(k)[1]);
+							list.add(0);
+							list.add(listSecondQuery.get(k)[2]);	
+						}	
 					}
 				}
+				if((k == listSecondQuery.size()-1) && (!list.contains(listFirstQuery.get(i)[1]))) {
+					list.add(listFirstQuery.get(i)[1]);
+					list.add(listFirstQuery.get(i)[2]);
+					list.add(0);
+				}
+			}
 		}
 		return list;
 	}

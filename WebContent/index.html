@@ -4,104 +4,119 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<title>TP 3 - Grupo 11</title>
 </head>
-	<header>
-		<h2>Arquitectura Web - TUDAI</h2>
-	</header>
-	
-	<div>
-		<!-- <select name="" id="AllCarrers"></select>
-		<select name="" id="AllStudient"></select> -->
-		<p> Matricular</p>
-		<form id="addMat" method="POST">
-			<input required type="text"  id="MatriLu" placeholder="lu">
-			<input required type="number" id="starYear" placeholder="starYear" >
-			<input type="number" id="graduationYear" placeholder="graduationYear" >
-			<select id="allCareers1" class="allCareers">
-				<option value="0" selected hidden>Carreras</option>
-			</select>
-			<input type="submit">
-		</form>
-	</div>
-
-
-	<div>
-		<!--  dar de alta un estudiante-->
-		<p> Dar de alta un estudiante </p>
-		<form id="addStudent" method="POST">
-			<input required placeholder="name" id="name" type="text">
-			<input required placeholder="surname" id="surname" type="text">
-			<input required placeholder="age" id="age" type="number">
-			<input required placeholder="genre" id="genre" type="text">
-			<input required placeholder="dni" id="dni" type="number">
-			<input required placeholder="city" id="city" type="text">
-			<input type="submit">
-		</form>
-	</div>
-	
-	<div>
-		<p> Obtener estudiante </p>
-		<form id="getStudentForm">
-			<input id="getStudent" type="text" placeholder="Libreta Universitaria">
-			<input type="submit">
-		</form>
-		<div hidden id="divInner">
-
-		</div>
-	</div>
-
-	<div>
-		<p> Obtener carrera</p>
-		<Form:get>
-			<input id="getCareer" type="button">
-		</Form:get>
-	</div>
-	
-	<div>
-		<p> Obtener estudiantes </p>
-		<input id="getStudents" type="button" placeholder="Obtener estudiantes">
-
-		<div id="showStudents">
-			<span>Todos los estudiantes</span>
-		</div>
-
-	</div>
-	
-	<p> Obtener estudiantes por genero</p>
-	<form id="getAllStudentsByGenre">
-		<input id="studentGenre" type="text" placeholder="genre"> 
-		<input id="btnSbyGenre" type="submit">
+<header>
+	<h2>Arquitectura Web - TUDAI</h2>
+</header>
+<body>
+<div class="addSt">
+	<h3> Dar de alta un estudiante </h3>
+	<form id="addStudent" method="POST">
+		<input required placeholder="name" id="name" type="text">
+		<input required placeholder="surname" id="surname" type="text">
+		<input required placeholder="age" id="age" type="number">
+		<select required id="genre">
+			<option value="0" selected hidden>Genre</option>
+			<option value="m">Maculino</option>
+			<option value="f">Femenino</option>
+		</select>
+		<input required placeholder="dni" id="dni" type="number">
+		<input required placeholder="city" id="city" type="text">
+		<input type="submit">
 	</form>
-	
-	<div>
-		<p> Obtener estudiantes por carrera </p>
-		<select id="allCareers2" class="allCareers">
-			<option value="0" selected hidden>Carreras</option>
-		</select>	
-		<input id="getStudentByCareer" type="button">
-		<div id="studentsForCareer" >
-		</div>		
-	</div>
+	<div id="alert" class="alert alert-warning" role="alert" hidden></div>
+</div>
 
-	<div>
-		<p> Obtener carreras con incriptos </p>
-			<input id="getCarrers" type="button">
-			<div id="carrerstWithInscript" >
-				
-			</div>
+<div class="addMt">
+	<h3> Matricular</h3>
+	<form id="addMat" method="POST">
+		<input required type="text"  id="MatriLu" placeholder="lu">
+		<input required type="number" id="starYear" placeholder="starYear" >
+		<input type="number" id="graduationYear" placeholder="graduationYear" >
+		<select id="allCareers1" class="allCareers">
+			<option value="0" selected hidden>Carreras</option>
+		</select>
+		<input type="submit">
+	</form>
+	<div id="alertMat" class="alert alert-warning" role="alert" hidden></div>
+</div>
+
+<div class="getSts">
+	<h3> Obtener todos los estudiantes (ordenados por nombre)</h3>
+	<input id="getStudents" type="button" value="Obtener">
+	<div id="showStudents">
+
 	</div>
-	
-	<div>
-		<p> Obtener reporte de carreras </p>
-			<input id"getReport" type="button">
-			<div id="report" >
-				
-			</div>
+</div>
+
+<div class="getSt">
+	<h3> Obtener estudiante por número de Libreta Universitaria</h3>
+	<form id="getStudentForm">
+		<input required id="getStudent" type="text" placeholder="Libreta Universitaria">
+		<input type="submit" value="Obtener">
+	</form>
+	<div hidden id="divInner">
+	<!-- Aquí va el Response -->
 	</div>
-	
-	<script src="js.js"> </script>
-	<body>
-	
+	<div id="alertSt" class="alert alert-warning" role="alert" hidden></div>
+</div>
+
+<div class="getStsByG">
+	<h3> Obtener estudiantes según género</h3>
+	<form id="getAllStudentsByGenre">
+		<select required id="studentGenre">
+			<option value="0" selected hidden>Genre</option>
+			<option value="m">Maculino</option>
+			<option value="f">Femenino</option>
+		</select>
+		<input id="btnSbyGenre" type="submit" value="Obtener">
+	</form>
+	<div hidden id="divByG">
+
+	</div>
+	<div id="alertGenre" class="alert alert-warning" role="alert" hidden></div>
+</div>
+
+
+<!-- <div class="getCr">
+	<h3> Obtener carrera</h3>
+	<input type="button" id="getCareer" value="Todas las carreras con inscriptos">
+</div> -->
+
+
+<div class="getStsByC">
+	<h3> Obtener estudiantes según carrera</h3>
+	<select id="allCareers2" class="allCareers">
+		<option value="0" selected hidden>Carreras</option>
+	</select>
+	<input id="getStudentByCareer" type="button" value="Obtener">
+	<div id="studentsForCareer" >
+	</div>
+</div>
+
+<div class="getCrWithSt">
+	<h3>Obtener carreras con estudiantes inscriptos (ordenadas por cantidad de inscriptos)</h3>
+	<input id="getCarrers" type="button" value="Obtener">
+	<div id="carrerstWithInscript" >
+
+	</div>
+</div>
+
+<div class="getReport">
+	<p> Obtener reporte de las carreras</p>
+	<input id="getReport" type="button" value="Obtener">
+	<div id="reportContainer">
+		
+	</div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="js.js"> </script>
+
 </body>
 </html>

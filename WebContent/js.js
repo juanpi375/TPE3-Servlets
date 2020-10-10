@@ -1,192 +1,100 @@
-// {
-    //         ["id": 1,
-    //         "name": "TUPAI",
-    //         "students": [
-        //             {
-            //                 "startYear": 2005,
-            //                 "graduationYear": 2007,
-            //                 "graduated": true,
-            //                 "antiquity": 15
-            //             }]
-            //         ],
-            //         ["id": 4,
-            //         "name": "TUPAI",
-            //         "students": [
-                //             {
-                    //                 "startYear": 2005,
-                    //                 "graduationYear": 2007,
-//                 "graduated": true,
-//                 "antiquity": 15
-//             }]],
-//         ["id": ,
-//         "name": "TUPAI",
-//         "students": [
-    //             {
-        //                 "startYear": 2005,
-        //                 "graduationYear": 2007,
-        //                 "graduated": true,
-        //                 "antiquity": 15
-        //             }]]
-        // }
-        
-//         let students=
-// [
-//         {
-//         "id": 2,
-//         "name": "TEBA",
-//         "students": [
-//                 {
-//                         "startYear": 2020,
-//                         "graduationYear": 2025,
-//                         "graduated": true,
-//                 "antiquity": 0
-//             }]
-//         },
-//         {
-//                     "id": 3,
-//                     "name": "tudai",
-//                     "students":[
-//                             {"startYear": 2020,
-//                             "graduationYear": 2025,
-//                             "graduated": true,
-//                     "antiquity": 0
-//                 }]
-//             },
-//         {
-//                 "id": 3,
-//                 "name": "Gestión",
-//                 "students": []
-//             },
-//             {
-//                     "id": 2,
-//                     "name": "TEBA",
-//                     "students": [
-//                             {
-//                                     "startYear": 2020,
-//                                     "graduationYear": 2025,
-//                     "graduated": true,
-//                     "antiquity": 0
-//                 }]
-//             },
-//             {
-//                     "id":4,
-//                 "students": [           
-//                     {
-//                             "startYear": 2020,
-//                             "graduationYear": 2025,
-//                         "graduated": true,
-//                         "antiquity": 0
-//                     }]
-//                 },
-//                 {
-//                 "id":5,
-//                 "name": "ssds",
-//                 "students": [           
-//                     {"startYear": 2010,
-//                     "graduationYear": 2012,
-//                     "graduated": true,
-//                     "antiquity": 10
-//                 }]
-//                 },
-//                 {
-//                     "id":6,
-//                     "name": "ssds",
-//                     "students":
-//                 [{
-//                         "startYear": 2004,
-//                         "graduationYear": 2008,
-//                     "graduated": true,
-//                 "antiquity": 16}]
-//             },
-//             {
-//                 "id":7,
-//                 "name": "ssds",
-//                 "students":
-//                 [{    "startYear": 2007,
-//                 "graduationYear": 2013,
-//                 "graduated": true,
-//                 "antiquity": 13
-//             }]},
-//             {  
-//                 "id":8,
-//                 "name": "ssds",
-//                 "students":
-//                 [{  "startYear": 2010,
-//                 "graduationYear": 2012,
-//                 "graduated": true,
-//                 "antiquity": 10}]
-//             },
-//             {
-//                 "id":9,
-//                 "name": "ssds",
-//                 "students":
-//                 [{
-//                 "startYear": 2007,
-//                 "graduationYear": 2013,
-//                 "graduated": true,
-//                 "antiquity": 13}]
-//         }
-// ];
 
 let url="http://localhost:8080/TPE3-Servlets/rest"
 
 //a)dar de alta un estudiante
 let form = document.getElementById("addStudent");
-    if(form != null){
-        form.addEventListener('submit',function addEstudient(e){
-            e.preventDefault();
-            let data= {
-                name : document.getElementById("name").value,
+if(form != null){
+    form.addEventListener('submit',function(e){
+        let alrt=document.querySelector("#alert");
+        alrt.hidden = true;
+        removeAllChildNodes(alrt);
+        e.preventDefault();
+        let genre=document.getElementById("genre").value;
+        if(genre!="0") {
+            let data = {
+                name: document.getElementById("name").value,
                 surname: document.getElementById("surname").value,
-                age: document.getElementById("age").value,    
-                genre: document.getElementById("genre").value,
+                age: document.getElementById("age").value,
+                genre: genre,
                 dni: document.getElementById("dni").value,
                 city: document.getElementById("city").value
             }
-            fetch(url+'/students', {
+            fetch(url + '/students', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},       
-                body: JSON.stringify(data) 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
             })
-            .then(response => {
-                console.log("se agrego")
-                console.log(data);
-            })
-            .catch(error => console.log(error));
+                .then(response => {
+                    let h = document.createElement("h4");
+                    let txt = document.createTextNode("El estudiante se agrego correctamente ")
+                    h.append(txt)
+                    alrt.appendChild(h)
+                    alrt.hidden = false;
+                })
+                .catch(error => {
+                    let h = document.createElement("h4");
+                    let txt = document.createTextNode("El estudiante No se agrego ");
+                    h.append(txt);
+                    alrt.appendChild(h);
+                    alrt.hidden = false;
+                })
+        }else {
+                    let h = document.createElement("h4");
+                    let txt = document.createTextNode("Debe seleccionar un sexo valido");
+                    h.append(txt);
+                    alrt.appendChild(h);
+                    alrt.hidden = false;
+        }
         })
-    }
+}
 // b) matricular un estudiante en una carrera
 let matForm = document.getElementById("addMat");
 //matForm.addEventListener("submit", )
 //if(matForm != null){
 matForm.addEventListener('submit', matriculate);
-	
+
 function matriculate(e){
-            e.preventDefault();
-            if(document.getElementById("allCarrers").value==0){
-                console.log("elija una carrera en donde matricularse")
-                return;
-            }else{
-                let data= {
-                    student: document.getElementById("MatriLu").value,
-                    career: document.getElementById("allCarrers").value,
-                    startYear: document.getElementById("starYear").value,
-                    graduationYear: document.getElementById("graduationYear").value,    
-                }
-                fetch(url+'/matriculations', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},       
-                    body: JSON.stringify(data) 
-                })
-                .then(response => {
-                    console.log("se agrego")
-                    console.log(data);
-                })
-                .catch(error => console.log(error));
-            } 
+    e.preventDefault();
+    let alrt=document.querySelector("#alertMat");
+    alrt.hidden = true;
+    removeAllChildNodes(alrt);
+    if(document.getElementById("allCareers1").value==0){
+        let h = document.createElement("h4");
+        let txt = document.createTextNode("Debe seleccionar una carrera valida");
+        h.append(txt);
+        alrt.appendChild(h);
+        alrt.hidden = false;
+        return;
+    }else{
+        let data= {
+            student: document.getElementById("MatriLu").value,
+            career: document.getElementById("allCareers1").value,
+            startYear: document.getElementById("starYear").value,
+            graduationYear: document.getElementById("graduationYear").value,
+        }
+        fetch(url+'/matriculations', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                let h = document.createElement("h4");
+                let txt = document.createTextNode("Se matriculo correctamente al estudiante");
+                h.append(txt);
+                alrt.appendChild(h);
+                alrt.hidden = false;
+            })
+            .catch(error =>{
+                let h = document.createElement("h4");
+                let txt = document.createTextNode("No se matriculo al estudiante");
+                h.append(txt);
+                alrt.appendChild(h);
+                alrt.hidden = false;
+                console.log(error)
+            });
     }
-	
-//}
+}
+
 
 //--------get carreras
 let formi = document.getElementById("getCareer");
@@ -197,129 +105,186 @@ async function getAllCareers(){
     try {
         let r = await fetch(url2, {
             "method": "get"
-            }, );
-            let students = await r.json();
-//            console.log("jeje"+students) 
-            let selectCareers= document.querySelectorAll(".allCareers");
-            console.log(selectCareers[0].id+" "+selectCareers[1].id+" sdfsdf")
-            for(let c in students){
-               
+        }, );
+        let students = await r.json();
+//            console.log("jeje"+students)
+        let selectCareers= document.querySelectorAll(".allCareers");
+        console.log(selectCareers[0].id+" "+selectCareers[1].id+" sdfsdf")
+        for(let c in students){
+
 //            console.log(selectCareers+"sdf")
-	            for(let sel of selectCareers){
-	            	 let opt=document.createElement("option");
-	                 let spn=document.createElement("span");
-	                 let cName= document.createTextNode(students[c].name);
-	                 spn.append(cName);
-	                 opt.value=students[c].id;
-	                 opt.append(spn);
-	            	sel.append(opt)
-	            	console.log(sel)
-	            }
-	//            selectCarrers.append(opt)
-	            console.log("dddd")
-	        }
-    }
-    catch{
-        
+            for(let sel of selectCareers){
+                let opt=document.createElement("option");
+                let spn=document.createElement("span");
+                let cName= document.createTextNode(students[c].name);
+                spn.append(cName);
+                opt.value=students[c].id;
+                opt.append(spn);
+                sel.append(opt)
+//                console.log(sel)
+            }
+            //            selectCarrers.append(opt)
+//            console.log("dddd")
         }
     }
+    catch{
+
+    }
+}
 getAllCareers();
 
 // c) recuperar todos los estudiantes, y especificar algún criterio de ordenamiento simple.
-    
+
 let btnGetAllStudents= document.getElementById("getStudents");
 btnGetAllStudents.addEventListener("click", getAllStudents);
 
-async function getAllStudents(){   
+async function getAllStudents(){
     let url2 = url+'/students';
     try {
         let r = await fetch(url2, {
             "method": "get"
         }, showStudents);
-//        console.log("yyyyyyyyy")
         let r2 = await r.json();
         contStud= document.querySelector("#showStudents");
         showStudents(r2,contStud)
-//        console.log("aca si")
-//        renew();  ahhh no
     }catch (n) {
         console.log("no muestra estudiantes");
     }
 }
 
-// d) recuperar un estudiante, en base a su número de libreta universitaria. 
-//document.getElementById("getStudent").addEventListener("submit",getStudent)
+// d) recuperar un estudiante, en base a su número de libreta universitaria.
+document.getElementById("getStudentForm").addEventListener("submit",getStudent)
 
-
-		async function getStudent(e){
-	 	e.preventDefault();
-        let studentId = document.querySelector();
-        let url2 = url+'/students/'+studentId;
-        try {
-            let r = await fetch(url2, {
-                "method": "get"
-            }, renew);
-            let r2 = await r.json();
-            if(r2!=null){
-                let div=document.document.getElementById("divInner");
-                div.innerHTML += "<tr>" + "<td>" + "name" + "</td>" + "<td>" + "LU" + "</td>" + "<td>" + "city" + "</td>" + "</tr>";
-                div.hidden=false;
-                div.innerHTML += "<tr>";
-                let td=document.createElement("td");
-                let sName= document.createTextNode(r2.name);
-                td.append(sName);
-                let liS=document.createElement("td");
-                let sSurname= document.createTextNode(r2.surname);
-                liS.append(sSurname);
-                let liA=document.createElement("td");
-                let sAge= document.createTextNode(r2.age);
-                liA.append(sAge);
-                let liG=document.createElement("td");
-                let sGenre= document.createTextNode(r2.genre);
-                liG.append(sGenre);
-                let liDNI=document.createElement("td");
-                let sDNI= document.createTextNode(r2.dni);
-                liDNI.append(sDNI);
-                let liC=document.createElement("td");
-                let sCity= document.createTextNode(r2.city);
-                liC.append(sCity);
-                let liLU=document.createElement("td");
-                let sLU= document.createTextNode(r2.lu);
-                liLU.append(sLU);
-                div.appendChilds(liA,liC,liDNI,liDNI,liG,liLU,td,liS);  
-                div.innerHTML += "</tr>";
-                renew();
-            }
-        } 
-        catch (n) {
-            console.log("error al obtener el estudiante"+n);
+async function getStudent(e){
+    e.preventDefault();
+    let alrt=document.querySelector("#alertSt")
+    alrt.hidden=true
+    let studentId = document.querySelector("#getStudent").value;
+    let div=document.getElementById("divInner");
+    removeAllChildNodes(div);
+    let url2 = url+'/students/'+studentId;
+    try {
+        let r = await fetch(url2, {
+            "method": "get"
+        });
+        let st = await r.json();
+        if(st!=null){
+            let tr= document.createElement("tr");
+            let liName = document.createElement("td");
+            let name = document.createTextNode("NAME");
+            liName.append(name)
+            let liSurname = document.createElement("td");
+            let surname = document.createTextNode("SURNAME");
+            liSurname.append(surname);
+            let liAge = document.createElement("td");
+            let age = document.createTextNode("Age");
+            liAge.append(age);
+            let liGenre = document.createElement("td");
+            let genre = document.createTextNode("Genre");
+            liGenre.append(genre);
+            let liD = document.createElement("td");
+            let dni = document.createTextNode("DNI");
+            liD.append(dni);
+            let liCity = document.createElement("td");
+            let city = document.createTextNode("City");
+            liCity.append(city);
+            let liL = document.createElement("td");
+            let lu = document.createTextNode("L.U");
+            liL.append(lu);
+            tr.append(liName, liSurname, liAge, liGenre, liCity, liD, liL);
+            div.appendChild(tr)
+            let ul = document.createElement("tr");
+            let liN = document.createElement("td");
+            let sName = document.createTextNode(st.name);
+            liN.append(sName);
+            let liS = document.createElement("td");
+            let sSurname = document.createTextNode(st.surname);
+            liS.append(sSurname);
+            let liA = document.createElement("td");
+            let sAge = document.createTextNode(st.age);
+            liA.append(sAge);
+            let liG = document.createElement("td");
+            let sGenre = document.createTextNode(st.genre);
+            liG.append(sGenre);
+            let liDNI = document.createElement("td");
+            let sDNI = document.createTextNode(st.dni);
+            liDNI.append(sDNI);
+            let liC = document.createElement("td");
+            let sCity = document.createTextNode(st.city);
+            liC.append(sCity);
+            let liLU = document.createElement("td");
+            let sLU = document.createTextNode(st.lu);
+            liLU.append(sLU);
+            ul.append( liN, liS, liA, liG, liC, liDNI, liLU);
+            div.appendChild(ul)
+            div.hidden=false;
+        }else{
+            let h = document.createElement("h4");
+            let txt = document.createTextNode("No se encontró ningun estudiante con la L.U proporcionada");
+            h.append(txt);
+            alrt.appendChild(h);
+            alrt.hidden = false;
         }
     }
+    catch (n) {
+        console.log("error al obtener el estudiante"+n);
+        let h = document.createElement("h4");
+        let txt = document.createTextNode("No se encontró ningun estudiante con la L.U proporcionada");
+        h.append(txt);
+        alrt.appendChild(h);
+        alrt.hidden = false;
+    }
+}
 
 //e) recuperar todos los estudiantes, en base a su género.
 let btnGetStudentsGenre= document.getElementById("getAllStudentsByGenre");
 btnGetStudentsGenre.addEventListener("submit", function(e){getAllStudentsByGenre(e)});
 
 function getAllStudentsByGenre(e){
-	e.preventDefault();
+    e.preventDefault();
+    let alrt=document.getElementById("alertGenre");
+    alrt.hidden=true;
     let genre=document.getElementById("studentGenre").value;
-    if(genre !="m" && genre != "f"){
-        console.log("elija una sexo valido")
+    if(genre =="0"){
+        let h = document.createElement("h4");
+        let txt = document.createTextNode("Debe seleccionar un sexo valido");
+        h.append(txt);
+        alrt.appendChild(h);
+        alrt.hidden = false;
         return;
     }else{
         fetch(url+'/students/genre/' + genre)
-        .then(response => response.json())
-        .then(resp => {
-            contStud= document.querySelector("#showStudents");
-  showStudents(resp,contStud);
-       })
+            .then(response => response.json())
+            .then(resp => {
+                let contStud= document.querySelector("#divByG");
+                showStudents(resp,contStud);
+                contStud.hidden=false;
+            })
     }
-} 
+}
 
-        
-        
 // f) recuperar las carreras con estudiantes inscriptos, y ordenar por cantidad de inscriptos.
 
+let btnGetCareersWithStudents= document.getElementById("getCarrers");
+btnGetCareersWithStudents.addEventListener("click", getCareersWithStudents);
+
+let getCareersWithStudentsContainer = document.querySelector("#carrerstWithInscript")
+
+async function getCareersWithStudents(){
+    let url2 = url+'/careers/with-students';
+    try {
+        let r = await fetch(url2, {
+            "method": "get"
+        }, showCareers);
+        let r2 = await r.json();
+//        showStudents(r2,contStud)
+        showCareers(r2, getCareersWithStudentsContainer)
+//        console.log(r2[0].students.length+"r2")
+    }catch(n) {
+    	console.log("Hubo un problema buscando carreras con estudiantes")
+//        console.log("no muestra estudiantes");
+    }
+}
 
 // g) recuperar los estudiantes de una determinada carrera, filtrado por ciudad de residencia.
 document.getElementById("getStudentByCareer").addEventListener('click',function(e){getStudentByCareer(e)})
@@ -332,9 +297,9 @@ function getStudentByCareer(e){
         return
     }else{
         fetch(url+'/students/career/' + career)
-        .then(response => response.json())
-        .then(resp => {
-            let cont= document.querySelector("#studentsForCareer");
+            .then(response => response.json())
+            .then(resp => {
+                let cont= document.querySelector("#studentsForCareer");
                 showStudents(resp,cont);
             })
     }
@@ -344,56 +309,141 @@ function getStudentByCareer(e){
 // h) generar un reporte de las carreras, que para cada carrera incluya información de los
 // inscriptos y egresados por año. Se deben ordenar las carreras alfabéticamente, y
 // presentar los años de manera cronológica.
+let btnReport= document.getElementById("getReport")
+btnReport.addEventListener("click", getReport)
 
+let getReportContainer = document.querySelector("#reportContainer")
 
-function showStudents(students,container){
-    for(let st of students){
-//    	console.log("llegaron"+st)
-//    	console.log("ul "+ul)
-        let ul=document.createElement("tr");
-        let liName=document.createElement("td");
-        let name= document.createTextNode("NAME");
-        let liN=document.createElement("td");
-        let sName= document.createTextNode(st.name);
-        liName.append(name)
+async function getReport(){
+ let url2 = url+'/careers/report';
+	try {
+	    let r = await fetch(url2, {
+	        "method": "get"
+	    }, showReport);
+	    let r2 = await r.json();
+	    console.log("Falta acomodar: retorna el nombre de la" +
+	    		"carrera seguido por la lista de los años en los" +
+	    		"que tiene información (el número de inscriptos primero" +
+	    		"y el número de graduados después): "+r2)
+	    showReport(r2, getReportContainer)
+	}catch(n){
+		console.log("Hubo un problema generando el registro")
+	}
+}
+
+//---------------------helpers------------------------------------
+
+function showStudents(students,container) {
+    removeAllChildNodes(container);
+    let tr= document.createElement("tr");
+    let liName = document.createElement("td");
+    let name = document.createTextNode("NAME");
+    liName.append(name)
+    let liSurname = document.createElement("td");
+    let surname = document.createTextNode("SURNAME");
+    liSurname.append(surname);
+    let liAge = document.createElement("td");
+    let age = document.createTextNode("Age");
+    liAge.append(age);
+    let liGenre = document.createElement("td");
+    let genre = document.createTextNode("Genre");
+    liGenre.append(genre);
+    let liD = document.createElement("td");
+    let dni = document.createTextNode("DNI");
+    liD.append(dni);
+    let liCity = document.createElement("td");
+    let city = document.createTextNode("City");
+    liCity.append(city);
+    let liL = document.createElement("td");
+    let lu = document.createTextNode("L.U");
+    liL.append(lu);
+    tr.append(liName, liSurname, liAge, liGenre, liCity, liD, liL);
+    container.appendChild(tr)
+
+    for (let st of students) {
+        let ul = document.createElement("tr");
+        let liN = document.createElement("td");
+        let sName = document.createTextNode(st.name);
         liN.append(sName);
-        let liSurname=document.createElement("td");
-        let surname= document.createTextNode("SURNAME");
-        let liS=document.createElement("td");
-        let sSurname= document.createTextNode(st.surname);
-        liSurname.append(surname);
+        let liS = document.createElement("td");
+        let sSurname = document.createTextNode(st.surname);
         liS.append(sSurname);
-        let liAge=document.createElement("td");
-        let age= document.createTextNode("Age");
-        let liA=document.createElement("td");
-        let sAge= document.createTextNode(st.age);
-        liAge.append(age);
+        let liA = document.createElement("td");
+        let sAge = document.createTextNode(st.age);
         liA.append(sAge);
-        let liGenre=document.createElement("td");
-        let genre= document.createTextNode("Genre");
-        let liG=document.createElement("td");
-        let sGenre= document.createTextNode(st.genre);
-        liGenre.append(genre);
+        let liG = document.createElement("td");
+        let sGenre = document.createTextNode(st.genre);
         liG.append(sGenre);
-        let liD=document.createElement("td");
-        let dni= document.createTextNode("DNI");
-        let liDNI=document.createElement("td");
-        let sDNI= document.createTextNode(st.dni);
-        liD.append(dni);
+        let liDNI = document.createElement("td");
+        let sDNI = document.createTextNode(st.dni);
         liDNI.append(sDNI);
-        let liCity=document.createElement("td");
-        let city= document.createTextNode("City");
-        let liC=document.createElement("td");
-        let sCity= document.createTextNode(st.city);
-        liCity.append(city);
+        let liC = document.createElement("td");
+        let sCity = document.createTextNode(st.city);
         liC.append(sCity);
-        let liL=document.createElement("td");
-        let lu= document.createTextNode("L.U");
-        let liLU=document.createElement("td");  
-        let sLU= document.createTextNode(st.lu);
-        liL.append(lu);
+        let liLU = document.createElement("td");
+        let sLU = document.createTextNode(st.lu);
         liLU.append(sLU);
-        ul.append(liName,liN,liSurname,liS,liAge,liA,liGenre,liG,liC,liD,liCity,liC,liDNI,liL,liLU);
+        ul.append( liN, liS, liA, liG, liC, liDNI, liLU);
         container.appendChild(ul)
+    }
+}
+
+function showCareers(careers,container) {
+    removeAllChildNodes(container);
+    let tr= document.createElement("tr");
+    let liName = document.createElement("td");
+    let name = document.createTextNode("NOMBRE");
+    liName.append(name)
+    let liSurname = document.createElement("td");
+    let surname = document.createTextNode("ESTUDIANTES");
+    liSurname.append(surname);
+    tr.append(liName, liSurname);
+    container.appendChild(tr)
+
+    for (let st of careers) {
+        let ul = document.createElement("tr");
+        
+        let liN = document.createElement("td");
+        let sName = document.createTextNode(st.name);
+        liN.append(sName);
+        let liS = document.createElement("td");
+        let sSurname = document.createTextNode(st.students.length);
+        liS.append(sSurname);
+        
+        ul.append(liN, liS);
+        container.appendChild(ul)
+    }
+}
+
+function showReport(report,container) {
+    removeAllChildNodes(container);
+    let tr= document.createElement("tr");
+    let liName = document.createElement("td");
+    let name = document.createTextNode("NOMBRE");
+    liName.append(name)
+//    let liSurname = document.createElement("td");
+//    let surname = document.createTextNode("ESTUDIANTES");
+//    liSurname.append(surname);
+    tr.append(liName);
+    container.appendChild(tr)
+
+//    for (let st of careers) {
+//        let ul = document.createElement("tr");
+//        
+//        let liN = document.createElement("td");
+//        let sName = document.createTextNode(st);
+//        liN.append(sName);
+////        let liS = document.createElement("td");
+////        let sSurname = document.createTextNode(st.students.length);
+////        liS.append(sSurname);
+//        
+//        ul.append(liN, liS);
+//        container.appendChild(ul)
+//    }
+}
+
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
     }
 }

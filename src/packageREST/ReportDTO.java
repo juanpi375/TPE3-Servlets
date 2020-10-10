@@ -13,7 +13,22 @@ public class ReportDTO implements Serializable {
     int LU;
     int startYear;
     int graduationYear;
-
+    
+    
+//    En realidad tendrían una lista de objetos
+//    Dichos objetos serían: 
+//    registroCarrera = {año: (int), alumnosCursando: [lista de alumnos], alumnosGraduados: [lista de alumnos]}
+//		Sería tipooo..
+//    private ArrayList<Object> registrosCarrera = new ArrayList<Object>();
+//    private void add(Object) Recibiría un objeto? mmmmm.. huele mal*
+//    *mmm.. pero no tendrías que hacer nunca un add, solo lo generarías **
+//    **mm pero necesitarías hacer un for of para recorrerlo en el frontend***
+//		***mmm y??
+    
+//    Si son solo..
+//    Registro = {año: (int), alumnosCursando: [lista de alumnos], alumnosGraduados: [lista de alumnos]}
+    
+    
     public Long getId() {
         return id;
     }
