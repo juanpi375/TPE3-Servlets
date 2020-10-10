@@ -162,6 +162,7 @@ async function getStudent(e){
     let studentId = document.querySelector("#getStudent").value;
     let div=document.getElementById("divInner");
     removeAllChildNodes(div);
+    
     let url2 = url+'/students/'+studentId;
     try {
         let r = await fetch(url2, {
@@ -231,6 +232,7 @@ async function getStudent(e){
         let h = document.createElement("h4");
         let txt = document.createTextNode("No se encontró ningun estudiante con la L.U proporcionada");
         h.append(txt);
+        removeAllChildNodes(alrt)
         alrt.appendChild(h);
         alrt.hidden = false;
     }
@@ -245,10 +247,11 @@ function getAllStudentsByGenre(e){
     let alrt=document.getElementById("alertGenre");
     alrt.hidden=true;
     let genre=document.getElementById("studentGenre").value;
-    if(genre =="0"){
+    if(genre == "0"){
         let h = document.createElement("h4");
         let txt = document.createTextNode("Debe seleccionar un sexo valido");
         h.append(txt);
+        removeAllChildNodes(alrt)
         alrt.appendChild(h);
         alrt.hidden = false;
         return;
@@ -292,8 +295,19 @@ document.getElementById("getStudentByCareer").addEventListener('click',function(
 function getStudentByCareer(e){
     e.preventDefault();
     career= document.getElementById("allCareers2").value;
+    
+    let alrt=document.getElementById("alertStudByCareer");
+    alrt.hidden=true;
+    
     if(career ==0){
         console.log("elija una carrera")
+        let h = document.createElement("h4");
+        let txt = document.createTextNode("Debe seleccionar una carrera");
+        h.append(txt);
+        removeAllChildNodes(alrt)
+        alrt.appendChild(h);
+        alrt.hidden = false;
+        
         return
     }else{
         fetch(url+'/students/career/' + career)
@@ -321,9 +335,9 @@ async function getReport(){
 	        "method": "get"
 	    }, showReport);
 	    let r2 = await r.json();
-	    console.log("Falta acomodar: retorna el nombre de la" +
-	    		"carrera seguido por la lista de los años en los" +
-	    		"que tiene información (el número de inscriptos primero" +
+	    console.log("Falta acomodar: retorna el nombre de la " +
+	    		"carrera seguido por la lista de los años en los " +
+	    		"que tiene información (el número de inscriptos primero " +
 	    		"y el número de graduados después): "+r2)
 	    showReport(r2, getReportContainer)
 	}catch(n){

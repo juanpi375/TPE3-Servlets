@@ -111,6 +111,7 @@ public List<Object> getReport() {
 						if(!list.contains(listSecondQuery.get(l)[1])) {
 							list.add(listSecondQuery.get(l)[1]);
 							list.add(0);
+//							list.add("estos son los egresados: ");
 							list.add(listSecondQuery.get(l)[2]);
 						}	
 					}
@@ -129,14 +130,15 @@ public List<Object> getReport() {
 					
 					if((((int) listFirstQuery.get(i)[1]) < (int) (listSecondQuery.get(k)[1]))) {
 						list.add(listFirstQuery.get(i)[1]);
+//						list.add("estos son los egresados2: ");
 						list.add(listFirstQuery.get(i)[2]);
 						list.add(0);
 						break;
 						
-						
 					} else if((((int) listFirstQuery.get(i)[1]) == (int) (listSecondQuery.get(k)[1]))) {
 						list.add(listFirstQuery.get(i)[1]);
 						list.add(listFirstQuery.get(i)[2]);
+//						list.add("estos son los egresados2: ");
 						list.add(listSecondQuery.get(k)[2]);
 						break;
 						
@@ -144,12 +146,14 @@ public List<Object> getReport() {
 						if(!list.contains(listFirstQuery.get(i)[1])) {
 							list.add(listSecondQuery.get(k)[1]);
 							list.add(0);
+//							list.add("estos son los egresados2: ");
 							list.add(listSecondQuery.get(k)[2]);	
 						}	
 					}
 				}
 				if((k == listSecondQuery.size()-1) && (!list.contains(listFirstQuery.get(i)[1]))) {
 					list.add(listFirstQuery.get(i)[1]);
+//					list.add("estos son los egresados2: ");
 					list.add(listFirstQuery.get(i)[2]);
 					list.add(0);
 				}
