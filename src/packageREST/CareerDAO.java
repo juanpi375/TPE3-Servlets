@@ -69,6 +69,10 @@ public class CareerDAO implements DAO<Career, Integer>{
 //	el cual es retornado
 	public ReportDTO getReport(){
 		EntityManager em=EMF.createEntityManager();
+		
+		
+//		CHEQUEAR CAMBIO DE PACKAGE!
+		
 		TypedQuery<QueryCareerElementDTO> q = em.createQuery( "SELECT new packageREST.QueryCareerElementDTO(c.name, m.startYear,m.graduationYear ,concat(s.name, ' ', s.surname)) FROM Matriculation m JOIN m.career c "+
 					" JOIN m.student s ORDER BY c.name, m.startYear, m.graduationYear",QueryCareerElementDTO.class);
 			List<QueryCareerElementDTO> elems = q.getResultList();

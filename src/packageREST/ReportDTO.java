@@ -25,7 +25,7 @@ public class ReportDTO{
     	for (ReportElement career : this.careers) {
 //    		Agrega el estudiante a la carrera en un año si existe o sino lo crea
 //    		Agrega solo si el nombre coincide..
-			if (career.name.contains(query.name)) {
+			if (career.name.equals(query.name)) {
 //    			Esta es la parte de inscriptos..
 				if (career.inscripts.containsKey(query.getStartYear())) {
 					List<String> newList = career.inscripts.get(query.getStartYear());
