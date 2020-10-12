@@ -47,14 +47,10 @@ public class CareerRESTController {
 		@GET
 		@Path("/report")
 		@Produces(MediaType.APPLICATION_JSON)
-		public List<Object> report() {
-//			public ReportDTO report() {
-//			ReportDTO car = CareerDAO.getInstance().getReport();
-			List<Object> car = CareerDAO.getInstance().getReport();
-//			Object car = true;
-			if(car!=null) {
-				return car;
-//				return "quedate tranqui, no es esto";
+		public ReportDTO report() {
+			ReportDTO report = CareerDAO.getInstance().getReport();
+			if(report!=null) {
+				return report;
 			}
 			else {
 				return null;

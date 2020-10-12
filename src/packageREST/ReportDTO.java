@@ -1,113 +1,63 @@
 package packageREST;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ReportDTO implements Serializable {
-    Long id;
-    String cName;
-    String sName;
-    int age;
-    String genre;
-    String city;
-    int DNI;
-    int LU;
-    int startYear;
-    int graduationYear;
+//Crea un registro con ReportElement que es
+//llenado gracias a los QueryCareerElementDTO
+//que llegan de respuesta desde CareerDAO
+public class ReportDTO{
+	
+	private List<ReportElement> careers;
     
+	public List<ReportElement> getCareers(){
+		return this.careers;
+	}
     
-//    En realidad tendrían una lista de objetos
-//    Dichos objetos serían: 
-//    registroCarrera = {año: (int), alumnosCursando: [lista de alumnos], alumnosGraduados: [lista de alumnos]}
-//		Sería tipooo..
-//    private ArrayList<Object> registrosCarrera = new ArrayList<Object>();
-//    private void add(Object) Recibiría un objeto? mmmmm.. huele mal*
-//    *mmm.. pero no tendrías que hacer nunca un add, solo lo generarías **
-//    **mm pero necesitarías hacer un for of para recorrerlo en el frontend***
-//		***mmm y??
-    
-//    Si son solo..
-//    Registro = {año: (int), alumnosCursando: [lista de alumnos], alumnosGraduados: [lista de alumnos]}
-    
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getcName() {
-        return cName;
-    }
-
-    public void setcName(String cName) {
-        this.cName = cName;
-    }
-
-    public String getsName() {
-        return sName;
-    }
-
-    public void setsName(String sName) {
-        this.sName = sName;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public int getDNI() {
-        return DNI;
-    }
-
-    public void setDNI(int DNI) {
-        this.DNI = DNI;
-    }
-
-    public int getLU() {
-        return LU;
-    }
-
-    public void setLU(int LU) {
-        this.LU = LU;
-    }
-
-    public int getStartYear() {
-        return startYear;
-    }
-
-    public void setStartYear(int startYear) {
-        this.startYear = startYear;
-    }
-
-    public int getGraduationYear() {
-        return graduationYear;
-    }
-
-    public void setGraduationYear(int graduationYear) {
-        this.graduationYear = graduationYear;
+	
+    public ReportDTO() {
+    	super();
+    	this.careers = new ArrayList<ReportElement>();
     }
     
+    public void add(QueryCareerElementDTO query) {
+    	boolean isInserted = false;
+    	for (ReportElement career : this.careers) {
+//    		Agrega el estudiante a la carrera en un año si existe o sino lo crea
+//    		Agrega solo si el nombre coincide..
+			if (career.name.contains(query.name)) {
+//    			Esta es la parte de inscriptos..
+				if (career.inscripts.containsKey(query.getStartYear())) {
+					List<String> newList = career.inscripts.get(query.getStartYear());
+					newList.add(query.getStudName());
+					career.inscripts.put(query.getStartYear(), newList);
+//				career.inscripts.get(query.matriculation.startYear).put(query.matriculation.startYear, career.get(1).get(r.startYear).add(r.student));
+				}else {
+					ArrayList<String> newList = new ArrayList<String>();
+					newList.add(query.getStudName());
+					career.inscripts.put(query.getStartYear(), newList);
+				}
+				isInserted = true;
+				
+//				Esta es la parte de gradudos..
+				if (career.graduated.containsKey(query.getGraduationYear())) {
+					List<String> newList = career.graduated.get(query.getGraduationYear());
+					newList.add(query.getStudName());
+					career.graduated.put(query.getStartYear(), newList);
+				}else {
+					ArrayList<String> newList = new ArrayList<String>();
+					newList.add(query.getStudName());
+					career.graduated.put(query.getStartYear(), newList);
+				}
+			}
+    	}
+    	
+//			..si el nombre de la carrera no coincide con ninguna de las
+//			que ya se crearon, creo la carrera y la agrego
+    	if (!isInserted) {
+    		ReportElement newCareer = new ReportElement(query.getName(), query.getStartYear(), query.getGraduationYear(), query.getStudName());
+			this.careers.add(newCareer);
+    	}
+    }
 }
 

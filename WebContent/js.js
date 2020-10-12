@@ -461,3 +461,11 @@ function removeAllChildNodes(parent) {
         parent.removeChild(parent.firstChild);
     }
 }
+
+
+
+
+
+
+
+

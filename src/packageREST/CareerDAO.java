@@ -1,11 +1,11 @@
 package packageREST;
 
-import java.util.ArrayList;
 //import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 //import packageREST.Matriculation;
 //import packageREST.Student;
@@ -63,103 +63,23 @@ public class CareerDAO implements DAO<Career, Integer>{
 		List<Career> careers = q.getResultList();
 		return careers;
 	}
-	
-//	@SuppressWarnings("unchecked")
-//	public List<Object[]> getReport() {
-//		EntityManager entityManager=EMF.createEntityManager();
-//		Query q = entityManager.createQuery( );
-//		
-//		List<Object[]> report = q.getResultList();
-////		ReportDTO report = q.getResultList();
-//		return report;
-//	}
-	
-	
-//	PROBARRR
-public List<Object> getReport() {
-		EntityManager em=EMF.createEntityManager();
-		Query firstQuery = em.createQuery("SELECT c.name, m.startYear, COUNT(m) FROM Matriculation m JOIN m.career c "+
-				 "GROUP BY c.name, m.startYear ORDER BY c.name, m.startYear");
-		@SuppressWarnings("unchecked")
-		List<Object[]> listFirstQuery = firstQuery.getResultList();
-		
-		Query secondQuery = em.createQuery("SELECT c.name, m.graduationYear, COUNT(m) FROM Matriculation m JOIN m.career c "+
-				 "WHERE m.graduationYear IS NOT NULL "+
-				 "GROUP BY c.name, m.graduationYear ORDER BY c.name, m.graduationYear");
-		
-		@SuppressWarnings("unchecked")
-		List<Object[]> listSecondQuery = secondQuery.getResultList();
-		
-		List<Object> list = new ArrayList<Object>();
-		
-		String nameCareer = null;
 
-		for(int i=0; i<listFirstQuery.size(); i++) {
+//	Obtiene filas con información de las carreras
+//	que se traducen en un objeto reporte 
+//	el cual es retornado
+	public ReportDTO getReport(){
+		EntityManager em=EMF.createEntityManager();
+		TypedQuery<QueryCareerElementDTO> q = em.createQuery( "SELECT new packageREST.QueryCareerElementDTO(c.name, m.startYear,m.graduationYear ,concat(s.name, ' ', s.surname)) FROM Matriculation m JOIN m.career c "+
+					" JOIN m.student s ORDER BY c.name, m.startYear, m.graduationYear",QueryCareerElementDTO.class);
+			List<QueryCareerElementDTO> elems = q.getResultList();
 			
-//			Agrega el nombre de la carrera solo la primera vez que aparece
-//			en la primera de las listas
-			if(nameCareer == null) {
-				nameCareer = (String) listFirstQuery.get(i)[0];
-			} else if(!listFirstQuery.get(i)[0].equals(nameCareer)) {
-				
-				for(int l=0; l<listSecondQuery.size(); l++) {
-					
-//					Si los nombres de las listas de ambas carreras coinciden,
-//					envío a la lista que se retornará los años de inscripción 
-//					y de graduación
-					if(listSecondQuery.get(l)[0].equals(nameCareer)) {
-						if(!list.contains(listSecondQuery.get(l)[1])) {
-							list.add(listSecondQuery.get(l)[1]);
-							list.add(0);
-//							list.add("estos son los egresados: ");
-							list.add(listSecondQuery.get(l)[2]);
-						}	
-					}
-				}	
-				nameCareer = (String) listFirstQuery.get(i)[0];
-			}
+//			Crea un reporte y lo llena
+			ReportDTO report = new ReportDTO();
 			
-//			Si se está iterando sobre otra carrera distinta a
-//			sobre la cual se venía, se la agrega
-			if(!list.contains(listFirstQuery.get(i)[0])) {
-				list.add(listFirstQuery.get(i)[0]);
+			for (QueryCareerElementDTO query : elems) {
+				report.add(query);
 			}
-			
-			for(int k=0; k<listSecondQuery.size(); k++) {
-				if(listFirstQuery.get(i)[0].equals(listSecondQuery.get(k)[0])) { 
-					
-					if((((int) listFirstQuery.get(i)[1]) < (int) (listSecondQuery.get(k)[1]))) {
-						list.add(listFirstQuery.get(i)[1]);
-//						list.add("estos son los egresados2: ");
-						list.add(listFirstQuery.get(i)[2]);
-						list.add(0);
-						break;
-						
-					} else if((((int) listFirstQuery.get(i)[1]) == (int) (listSecondQuery.get(k)[1]))) {
-						list.add(listFirstQuery.get(i)[1]);
-						list.add(listFirstQuery.get(i)[2]);
-//						list.add("estos son los egresados2: ");
-						list.add(listSecondQuery.get(k)[2]);
-						break;
-						
-					} else {
-						if(!list.contains(listFirstQuery.get(i)[1])) {
-							list.add(listSecondQuery.get(k)[1]);
-							list.add(0);
-//							list.add("estos son los egresados2: ");
-							list.add(listSecondQuery.get(k)[2]);	
-						}	
-					}
-				}
-				if((k == listSecondQuery.size()-1) && (!list.contains(listFirstQuery.get(i)[1]))) {
-					list.add(listFirstQuery.get(i)[1]);
-//					list.add("estos son los egresados2: ");
-					list.add(listFirstQuery.get(i)[2]);
-					list.add(0);
-				}
-			}
-		}
-		return list;
+			return report;
 	}
 	
 	@Override
