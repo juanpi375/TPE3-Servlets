@@ -82,6 +82,7 @@ matForm.addEventListener('submit', matriculate);
 
 function matriculate(e){
     e.preventDefault();
+//    console.log("Matriculating..")
     let alrt=document.querySelector("#alertMat");
     alrt.hidden = true;
     removeAllChildNodes(alrt);

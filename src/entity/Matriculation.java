@@ -13,6 +13,7 @@ import javax.persistence.MapsId;
 public class Matriculation implements Serializable {
 	@Column
 	private int startYear;
+//	@Column(nullable = true)
 	@Column
 	private Integer graduationYear;
 	@Id

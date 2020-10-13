@@ -41,6 +41,9 @@ public class MatriculationRESTController {
 		Student s = StudentDAO.getInstance().findById(m.getStudent());
 		
 		Matriculation mat = new Matriculation(m.getStartYear(), m.getGraduationYear(), c, s);
+		
+//		Matriculation mat = c.addStudent(m.getStartYear(), m.getGraduationYear(), s);
+		
 		Matriculation matResult = MatriculationDAO.getInstance().persist(mat);
 		if(matResult == null) {
 			return null;

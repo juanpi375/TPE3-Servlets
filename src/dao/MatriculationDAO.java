@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import entity.Matriculation;
+import extras.EMF;
 
 public class MatriculationDAO implements DAO<Matriculation, Integer> {
 
