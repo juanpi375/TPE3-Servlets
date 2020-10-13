@@ -10,4 +10,6 @@
 
 5_Servir la aplicacion en Tom Cat
 
-6_En la pagina que se abrira, se podran probar todas la consultas solicitadas.
+6_En el link que se abrira, se podran probar todas la consultas solicitadas. 
+
+(Las pruebas fueron realizadas en un navegador mozilla)
