@@ -4,12 +4,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
 	
-	<persistence-unit name="Jersey">
+	<persistence-unit name="University">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-		<class>packageREST.Student</class>
-		<class>packageREST.Career</class>
-		<class>packageREST.Matriculation</class>
+		<class>rest.Student</class>
+		<class>rest.Career</class>
+		<class>rest.Matriculation</class>
 
 		
 		<properties>
@@ -19,7 +19,7 @@
 
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://localhost:3306/tpe2?serverTimezone=UTC"/>
+				value="jdbc:mysql://localhost:3306/university?serverTimezone=UTC"/>
 			<property name="javax.persistence.jdbc.user" value="root"/>
 			<property name="javax.persistence.jdbc.password" value=""/>
 

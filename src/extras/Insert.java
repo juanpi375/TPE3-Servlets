@@ -10,7 +10,7 @@ import entity.Student;
 
 public class Insert {
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("exampledb");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("University");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         Student s1 = new Student("Luciano", "Diaz", 15, 'm', 45222111, "Villa Carlos Paz");

@@ -27,6 +27,32 @@ public class StudentRESTController {
 	}
 	
 	@GET
+	@Path("/citys")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> getStudentsCitys(){
+		List<String> citys = StudentDAO.getInstance().findAllCitys();
+		if(citys!=null) {
+			return citys;
+		}
+		else {
+			return null;
+		}
+	}
+	
+	@GET
+	@Path("/career/{career}/{city}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Student> getStudentByCareer(@PathParam("career") int c , @PathParam("city") String city) {
+		List<Student> student = StudentDAO.getInstance().findAllByCareerFilterCity(c,city);
+		if(student!=null) {
+			return student;
+		}
+		else {
+			return null;
+		}
+	}
+	
+	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Student getStudentByLU(@PathParam("id") String msg) {
@@ -54,18 +80,18 @@ public class StudentRESTController {
 		}
 	}
 	
-	@GET
-	@Path("/career/{career}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Student> getStudentByCareer(@PathParam("career") int c) {
-		List<Student> student = StudentDAO.getInstance().findAllByCareerFilterCity(c);
-		if(student!=null) {
-			return student;
-		}
-		else {
-			return null;
-		}
-	}
+//	@GET
+//	@Path("/career/{career}")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public List<Student> getStudentByCareer(@PathParam("career") int c) {
+//		List<Student> student = StudentDAO.getInstance().findAllByCareerFilterCity(c);
+//		if(student!=null) {
+//			return student;
+//		}
+//		else {
+//			return null;
+//		}
+//	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)

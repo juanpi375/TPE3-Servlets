@@ -1,6 +1,32 @@
 
 let url="http://localhost:8080/TPE3-Servlets/rest"
 
+async function getAllCitys(){
+    let url2 = url+'/students/citys';
+    try {
+        let r = await fetch(url2, {
+            "method": "get"
+        }, );
+        let citys = await r.json();
+        let selectCitys= document.querySelector("#allCitys");
+        for(let c in citys){
+            let opt=document.createElement("option");
+            let spn=document.createElement("span");
+            let cName= document.createTextNode(citys[c]);
+            spn.append(cName);
+            opt.value=citys[c];
+            opt.append(spn);
+            selectCitys.append(opt)
+        }
+    }
+    catch{
+
+    }
+}
+getAllCitys();
+
+
+	
 //a)dar de alta un estudiante
 let form = document.getElementById("addStudent");
 if(form != null){
@@ -30,6 +56,7 @@ if(form != null){
                     h.append(txt)
                     alrt.appendChild(h)
                     alrt.hidden = false;
+                    getAllCitys();
                 })
                 .catch(error => {
                     let h = document.createElement("h4");
@@ -109,7 +136,8 @@ async function getAllCareers(){
         let students = await r.json();
 //            console.log("jeje"+students)
         let selectCareers= document.querySelectorAll(".allCareers");
-        console.log(selectCareers[0].id+" "+selectCareers[1].id+" sdfsdf")
+//        console.log(selectCareers[0].id+" "+selectCareers[1].id+" sdfsdf")
+        console.log("Buscando carreras..")
         for(let c in students){
 
 //            console.log(selectCareers+"sdf")
@@ -148,7 +176,7 @@ async function getAllStudents(){
         contStud= document.querySelector("#showStudents");
         showStudents(r2,contStud)
     }catch (n) {
-        console.log("no muestra estudiantes");
+        console.log("Error obteniendo estudiantes");
     }
 }
 
@@ -228,7 +256,7 @@ async function getStudent(e){
         }
     }
     catch (n) {
-        console.log("error al obtener el estudiante"+n);
+        console.log("Error al obtener el estudiante: "+n);
         let h = document.createElement("h4");
         let txt = document.createTextNode("No se encontró ningun estudiante con la L.U proporcionada");
         h.append(txt);
@@ -290,31 +318,64 @@ async function getCareersWithStudents(){
 }
 
 // g) recuperar los estudiantes de una determinada carrera, filtrado por ciudad de residencia.
+//document.getElementById("getStudentByCareer").addEventListener('click',function(e){getStudentByCareer(e)})
+//
+//function getStudentByCareer(e){
+//    e.preventDefault();
+//    career= document.getElementById("allCareers2").value;
+//    
+//    let alrt=document.getElementById("alertStudByCareer");
+//    alrt.hidden=true;
+//    
+//    if(career ==0){
+//        console.log("elija una carrera")
+//        let h = document.createElement("h4");
+//        let txt = document.createTextNode("Debe seleccionar una carrera");
+//        h.append(txt);
+//        removeAllChildNodes(alrt)
+//        alrt.appendChild(h);
+//        alrt.hidden = false;
+//        
+//        return
+//    }else{
+//        fetch(url+'/students/career/' + career)
+//            .then(response => response.json())
+//            .then(resp => {
+//                let cont= document.querySelector("#studentsForCareer");
+//                showStudents(resp,cont);
+//            })
+//    }
+//}
 document.getElementById("getStudentByCareer").addEventListener('click',function(e){getStudentByCareer(e)})
 
 function getStudentByCareer(e){
     e.preventDefault();
-    career= document.getElementById("allCareers2").value;
-    
-    let alrt=document.getElementById("alertStudByCareer");
+    let alrt=document.getElementById("alertStCity");
     alrt.hidden=true;
-    
-    if(career ==0){
-        console.log("elija una carrera")
+    removeAllChildNodes(alrt)
+    let career= document.getElementById("allCareers2").value;
+    let city = document.getElementById("allCitys").value;
+    if(career ==0 ){
         let h = document.createElement("h4");
         let txt = document.createTextNode("Debe seleccionar una carrera");
         h.append(txt);
-        removeAllChildNodes(alrt)
         alrt.appendChild(h);
         alrt.hidden = false;
-        
         return
-    }else{
-        fetch(url+'/students/career/' + career)
+    }else if(city==0){
+        let h = document.createElement("h4");
+        let txt = document.createTextNode("Debe seleccionar una ciudad");
+        h.append(txt);
+        alrt.appendChild(h);
+        alrt.hidden = false;
+        return
+    }
+    else{
+        fetch(url+'/students/career/' + career +'/'+city)
             .then(response => response.json())
             .then(resp => {
-                let cont= document.querySelector("#studentsForCareer");
-                showStudents(resp,cont);
+                let cont = document.querySelector("#studentsForCareer");
+                showStudents(resp, cont);
             })
     }
 }
@@ -323,15 +384,19 @@ function getStudentByCareer(e){
 // h) generar un reporte de las carreras, que para cada carrera incluya información de los
 // inscriptos y egresados por año. Se deben ordenar las carreras alfabéticamente, y
 // presentar los años de manera cronológica.
-let btnReport= document.getElementById("getReport")
-btnReport.addEventListener("click", getReport)
 
+//let btnReport= document.getElementById("getReport")
+//btnReport.addEventListener("click", getReport)
 
-async function getReport(e){
+document.getElementById("getReport").addEventListener('click',function(e){showReport(e)})
+
+//    let cont = document.querySelector("#reportContainer");
+//    console.log(cont+" aqui")
+
+async function showReport(e){
     e.preventDefault();
-//    let cont = document.querySelector("#report");
-//    Report is getReportContainer
-    let cont = document.querySelector("#reportContainer")
+    let cont = document.querySelector("#reportContainer");
+    console.log(cont)
     removeAllChildNodes(cont);
     let url2 = url+'/careers/report';
     try {
@@ -339,178 +404,216 @@ async function getReport(e){
             "method": "get"
         }, );
         let report = await r.json();
-//        let map = new Map()
-        
-//        let map = {}
-//        for(let c of report.careers){
-//        	for(let year of c){
-//        		
-//        	}
-//        }
-////        	map.algo = c
-//        	for(let [year, student] of Object.entries(c.inscripts)){
-//        		if(!(year in map)){
-//        			map.year = []
-//        			map.year[0] = new Array()
-//        			map.year[1] = new Array()
-////        			console.log("4")
-//        		}
-//        		map.year[0].push(student)
-//        		console.log(map.year[0].length)
-//        		console.log(map.year[0])
-//        		console.log(year)
-////        		console.log(map.year)
-//        	}
-//        	for(let [year, student] of Object.entries(c.graduated)){
-//        		if(!(year in map)){
-//        			map.year = []
-//        			map.year[0] = []
-//        			map.year[1] = []
-//        		}
-//        		map.year[1].push(student)
-////        		console.log(map.year)
-//        	}
-//        }
-//        for(let i in map){
-//        	console.log(map.year)
-//        }
-//        console.log("mapa "+map)
-//        console.log(map.algo)
-        
-//            console.log(c)
-//            let ul = document.createElement("ul");
-//            let liName = document.createElement("li")
-//            let Cname = document.createTextNode("Carrera: " + c.name)
-//            liName.append(Cname);
-//            console.log(Cname);
-//            ul.append(liName);
-//            cont.append(ul)     
-            
-//            let insc=c.inscripts;
-//            let grad=c.graduated;
-//            let arrayIns = Object.entries(insc);
-//            let arrayGrad = Object.entries(grad);
-//            
-//            for (let [key1, value1] of arrayIns) {
-//                for (let [key, value] of arrayGrad) {
-//                    let ul2=document.createElement("ul");
-//                    if(key1==key){
-//                        let liYear = document.createElement("li");
-//                        let year = document.createTextNode("Año: "+key1)
-//                        liYear.append(year);
-//                        let liIns= document.createElement("li");
-//                        let ins = document.createTextNode("Estudiantes inscriptos: ")
-//                        liIns.append(ins)
-//                        ul2.append(liYear,liIns)
-//                        for(let st of value1){
-//                            let liStud = document.createElement("li");
-//                            let stud = document.createTextNode(st)
-//                            liStud.append(stud)
-//                            ul2.append(liStud)
-//                        }
-//                        let liGrad= document.createElement("li");
-//                        let grad= document.createTextNode("Estudiantes Graduados: ")
-//                        liGrad.append(grad);
-//                        ul2.append(liGrad);
-//                        for(let st of value){
-//                            let liStud = document.createElement("li");
-//                            let stud = document.createTextNode(st)
-//                            liStud.append(stud)
-//                            ul2.append(liStud)
-//                        }
-//                    }else if(value1<value) {
-//                        let liYear = document.createElement("li");
-//                        let year = document.createTextNode("Año: " + key1)
-//                        liYear.append(year);
-//                        let liIns = document.createElement("li");
-//                        let ins = document.createTextNode("Estudiantes inscriptos: ")
-//                        liIns.append(ins)
-//                        ul2.append(liYear, liIns)
-//                        for (let st of value1) {
-//                            let liStud = document.createElement("li");
-//                            let stud = document.createTextNode(st)
-//                            liStud.append(stud)
-//                            ul2.append(liStud)
-//                        }
-//                        let liGrad= document.createElement("li");
-//                        let grad= document.createTextNode(" No Hubo Estudiantes Graduados En Este Año")
-//                        liGrad.append(grad);
-//                        ul2.append(liGrad);
-//                    }else{
-//                        let liYear = document.createElement("li");
-//                        let year = document.createTextNode("Año: " + key1)
-//                        liYear.append(year);
-//                        let liIng= document.createElement("li");
-//                        let ing= document.createTextNode(" No Hubo Estudiantes Ingresantes En Este Año")
-//                        liIng.append(ing);
-//                        ul2.append(liYear,liIng);
-//                        let liGrad= document.createElement("li");
-//                        let grad= document.createTextNode("Estudiantes Graduados: ")
-//                        liGrad.append(grad);
-//                        ul2.append(liGrad);
-//                        for(let st of value){
-//                            let liStud = document.createElement("li");
-//                            let stud = document.createTextNode(st)
-//                            liStud.append(stud)
-//                            ul2.append(liStud)
-//                        }
-//                    }
-//                    cont.append(ul2)
-//                }
-//            }
-//        }
-
-    }catch {
-    	console.log("Error en el reporte")
-    }
-//    cont.hidden=false
+        // let careers=[];
+        for(let c of report.careers){
+            // console.log(c)
+            let ul = document.createElement("ul");
+            let liName = document.createElement("li")
+            let Cname = document.createTextNode("Carrera: " + c.name)
+            liName.append(Cname);
+            // console.log(Cname);
+            ul.append(liName);
+            cont.append(ul)
+            // let insc=c.inscripts;
+            // let grad=c.graduated;
+            // let arrayIns = Object.entries(insc);
+            let mapStud = Object.entries(c.students);
+            // let Career=new CareerReport(c.name)
+            for (let [key, value] of mapStud) {
+                let liYear = document.createElement("li");
+                let year = document.createTextNode("Año: "+key);
+                liYear.append(year);
+                ul.append(liYear);
+                let ul2=document.createElement("ul");
+                let liIns= document.createElement("li");
+                let ins = document.createTextNode("Estudiantes inscriptos: ")
+                liIns.append(ins)
+                ul2.append(liIns)
+                if(value.inscripted.length != 0) {
+                    for (let st of value.inscripted) {
+                        let liStud = document.createElement("li");
+                        let stud = document.createTextNode(st)
+                        liStud.append(stud)
+                        ul2.append(liStud)
+                        // let stud = new Student(year, st);
+                        // console.log(stud);
+                        // Career.addInscript(stud)
+                    }
+                }else {
+                    let liIng= document.createElement("li");
+                    let ing= document.createTextNode(" No Hubo Estudiantes Ingresantes En Este Año")
+                    liIng.append(ing);
+                    ul2.append(liIng);
+                }
+                let liGrad= document.createElement("li");
+                let grad= document.createTextNode("Estudiantes Graduados: ")
+                liGrad.append(grad);
+                ul2.append(liGrad);
+                if(value.graduated.length != 0){
+                    for (let st of value.graduated) {
+                        let liStud = document.createElement("li");
+                        let stud = document.createTextNode(st)
+                        liStud.append(stud)
+                        ul2.append(liStud)
+                        // let year = key;
+                        // for (let st of value) {
+                        //     let stud = new Student(year, st);
+                        //     console.log(stud);
+                        //     Career.addGraduate(stud)
+                        // }
+                    }
+                }else {
+                    let liGrad= document.createElement("li");
+                    let grad= document.createTextNode(" No Hubo Estudiantes Graduados En Este Año")
+                    liGrad.append(grad);
+                    ul2.append(liGrad);
+                }
+                ul.append(ul2)
+           }
+            cont.hidden = false
+        }
+         }catch(n){
+        	 console.log("Hubo un problema buscando el reporte")
+        	}
 }
 
-//async function getReport(){
-// let url2 = url+'/careers/report';
-//	try {
-//	    let r = await fetch(url2, {
-//	        "method": "get"
-//	    }, showReport);
-//	    let r2 = await r.json();
-//	    for(let c of r2.careers){
-//	    	console.log(c)
+//async function getReport(e){
+//    e.preventDefault();
+////    let cont = document.querySelector("#report");
+////    Report is getReportContainer
+//    let cont = document.querySelector("#reportContainer")
+//    removeAllChildNodes(cont);
+//    let url2 = url+'/careers/report';
+//    try {
+//        let r = await fetch(url2, {
+//            "method": "get"
+//        }, );
+//        let report = await r.json();
+////        let map = new Map()
+//        
+////        let map = {}
+////        for(let c of report.careers){
+////        	for(let year of c){
+////        		
+////        	}
+////        }
+//////        	map.algo = c
+////        	for(let [year, student] of Object.entries(c.inscripts)){
+////        		if(!(year in map)){
+////        			map.year = []
+////        			map.year[0] = new Array()
+////        			map.year[1] = new Array()
+//////        			console.log("4")
+////        		}
+////        		map.year[0].push(student)
+////        		console.log(map.year[0].length)
+////        		console.log(map.year[0])
+////        		console.log(year)
+//////        		console.log(map.year)
+////        	}
+////        	for(let [year, student] of Object.entries(c.graduated)){
+////        		if(!(year in map)){
+////        			map.year = []
+////        			map.year[0] = []
+////        			map.year[1] = []
+////        		}
+////        		map.year[1].push(student)
+//////        		console.log(map.year)
+////        	}
+////        }
+////        for(let i in map){
+////        	console.log(map.year)
+////        }
+////        console.log("mapa "+map)
+////        console.log(map.algo)
+//        
+////            console.log(c)
 ////            let ul = document.createElement("ul");
 ////            let liName = document.createElement("li")
 ////            let Cname = document.createTextNode("Carrera: " + c.name)
 ////            liName.append(Cname);
+////            console.log(Cname);
 ////            ul.append(liName);
-////            cont.append(ul)
+////            cont.append(ul)     
+//            
 ////            let insc=c.inscripts;
-//////            console.log(insc+" son los inscripts");
-//            for (const [key, value] of Object.entries(insc)) {
-//                console.log(key, value);
-//            }
-//////            for (const [key, value] of myMap.entries()) {
-//////            	  console.log(key, value);
-//////            	}
-////            // let stIn = jsonToStrMap(c.inscripts);
-////            // console.log(stIn);
-////            // for (let insc of c.inscripts) {
-////            //     for (let grad of c.graduated) {
-////            //         console.log(insc)
-////            //         let liYear = document.createElement("li");
-////            //         let year = document.createTextNode("Año")
-////            //         let ulStIns = document.createElement("ul");
-////            //     }
-////            // }
+////            let grad=c.graduated;
+////            let arrayIns = Object.entries(insc);
+////            let arrayGrad = Object.entries(grad);
+////            
+////            for (let [key1, value1] of arrayIns) {
+////                for (let [key, value] of arrayGrad) {
+////                    let ul2=document.createElement("ul");
+////                    if(key1==key){
+////                        let liYear = document.createElement("li");
+////                        let year = document.createTextNode("Año: "+key1)
+////                        liYear.append(year);
+////                        let liIns= document.createElement("li");
+////                        let ins = document.createTextNode("Estudiantes inscriptos: ")
+////                        liIns.append(ins)
+////                        ul2.append(liYear,liIns)
+////                        for(let st of value1){
+////                            let liStud = document.createElement("li");
+////                            let stud = document.createTextNode(st)
+////                            liStud.append(stud)
+////                            ul2.append(liStud)
+////                        }
+////                        let liGrad= document.createElement("li");
+////                        let grad= document.createTextNode("Estudiantes Graduados: ")
+////                        liGrad.append(grad);
+////                        ul2.append(liGrad);
+////                        for(let st of value){
+////                            let liStud = document.createElement("li");
+////                            let stud = document.createTextNode(st)
+////                            liStud.append(stud)
+////                            ul2.append(liStud)
+////                        }
+////                    }else if(value1<value) {
+////                        let liYear = document.createElement("li");
+////                        let year = document.createTextNode("Año: " + key1)
+////                        liYear.append(year);
+////                        let liIns = document.createElement("li");
+////                        let ins = document.createTextNode("Estudiantes inscriptos: ")
+////                        liIns.append(ins)
+////                        ul2.append(liYear, liIns)
+////                        for (let st of value1) {
+////                            let liStud = document.createElement("li");
+////                            let stud = document.createTextNode(st)
+////                            liStud.append(stud)
+////                            ul2.append(liStud)
+////                        }
+////                        let liGrad= document.createElement("li");
+////                        let grad= document.createTextNode(" No Hubo Estudiantes Graduados En Este Año")
+////                        liGrad.append(grad);
+////                        ul2.append(liGrad);
+////                    }else{
+////                        let liYear = document.createElement("li");
+////                        let year = document.createTextNode("Año: " + key1)
+////                        liYear.append(year);
+////                        let liIng= document.createElement("li");
+////                        let ing= document.createTextNode(" No Hubo Estudiantes Ingresantes En Este Año")
+////                        liIng.append(ing);
+////                        ul2.append(liYear,liIng);
+////                        let liGrad= document.createElement("li");
+////                        let grad= document.createTextNode("Estudiantes Graduados: ")
+////                        liGrad.append(grad);
+////                        ul2.append(liGrad);
+////                        for(let st of value){
+////                            let liStud = document.createElement("li");
+////                            let stud = document.createTextNode(st)
+////                            liStud.append(stud)
+////                            ul2.append(liStud)
+////                        }
+////                    }
+////                    cont.append(ul2)
+////                }
+////            }
 ////        }
-//////	    console.log("Falta acomodar: retorna el nombre de la " +
-//////	    		"carrera seguido por la lista de los años en los " +
-//////	    		"que tiene información (el número de inscriptos primero " +
-//////	    		"y el número de graduados después): "+r2)
-////	    
-//	    showReport(r2, getReportContainer)
-//	    }
-//	}
-//	    catch(n){
-//		console.log("Hubo un problema generando el registro")
-//	}
+//
+//    }catch {
+//    	console.log("Error en el reporte")
+//    }
+////    cont.hidden=false
 //}
 
 //---------------------helpers------------------------------------
@@ -597,34 +700,36 @@ function showCareers(careers,container) {
     }
 }
 
-function showReport(report,container) {
-    removeAllChildNodes(container);
-    let tr= document.createElement("tr");
-    let liName = document.createElement("td");
-    let name = document.createTextNode("NOMBRE");
-    liName.append(name)
-//    let liSurname = document.createElement("td");
-//    let surname = document.createTextNode("ESTUDIANTES");
-//    liSurname.append(surname);
-    tr.append(liName);
-    container.appendChild(tr)
-
-//    for (let st of careers) {
-//        let ul = document.createElement("tr");
-//        
-//        let liN = document.createElement("td");
-//        let sName = document.createTextNode(st);
-//        liN.append(sName);
-////        let liS = document.createElement("td");
-////        let sSurname = document.createTextNode(st.students.length);
-////        liS.append(sSurname);
-//        
-//        ul.append(liN, liS);
-//        container.appendChild(ul)
-//    }
-}
+//function showReport(report,container) {
+//    removeAllChildNodes(container);
+//    let tr= document.createElement("tr");
+//    let liName = document.createElement("td");
+//    let name = document.createTextNode("NOMBRE");
+//    liName.append(name)
+////    let liSurname = document.createElement("td");
+////    let surname = document.createTextNode("ESTUDIANTES");
+////    liSurname.append(surname);
+//    tr.append(liName);
+//    container.appendChild(tr)
+//
+////    for (let st of careers) {
+////        let ul = document.createElement("tr");
+////        
+////        let liN = document.createElement("td");
+////        let sName = document.createTextNode(st);
+////        liN.append(sName);
+//////        let liS = document.createElement("td");
+//////        let sSurname = document.createTextNode(st.students.length);
+//////        liS.append(sSurname);
+////        
+////        ul.append(liN, liS);
+////        container.appendChild(ul)
+////    }
+//}
 
 function removeAllChildNodes(parent) {
+//	console.log(parent)
+//	if (parent==undefined){return}
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
